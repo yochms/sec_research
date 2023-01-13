@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "EkzaHFFObBo302HbQ+HL5cF8I8DhpgZxbhdl3CjXMsFDttInPI8TPZEnB+n4gyfOReQ1aLUrX6nWjfrzosaczw==",
+  "success": true,
+  "projectFilePath": "D:\\POC\\PaddingOracle2\\PaddingOracle2\\PaddingOracle2.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\yoch\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.12\\microsoft.netcore.app.ref.6.0.12.nupkg.sha512",
+    "C:\\Users\\yoch\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.12\\microsoft.netcore.app.host.win-x64.6.0.12.nupkg.sha512"
+  ],
+  "logs": []
+}

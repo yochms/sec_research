@@ -9,7 +9,9 @@ namespace PaddingOracle2
 {
     public class Oracle
     {
-        public static byte[] Encrypt(string plainTxt, byte[] iv, byte[] key)
+        private static byte[] key = Encoding.ASCII.GetBytes("1234567890123453");
+
+        public static byte[] Encrypt(string plainTxt, byte[] iv)
         {
             byte[] encrypted;
 
@@ -37,7 +39,7 @@ namespace PaddingOracle2
             return encrypted;
         }
 
-        public static string Decrypt(byte[] cipher, byte[] iv, byte[] key)
+        public static string Decrypt(byte[] cipher, byte[] iv)
         {
             string plainText = string.Empty;
             // Try to decrypt the cipher

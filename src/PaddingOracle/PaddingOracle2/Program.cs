@@ -7,14 +7,14 @@ namespace PaddingOracle2
     {
         static void Main(string[] args)
         {
-            var strToBeEncrypted = "abcdefghijklmnopabcdefghijklmnopabcde";
+            var strToBeEncrypted = "abcdefghijklmnopabcdefghijklmnopabcdefghijklmn";
             var iv = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            var key = Encoding.ASCII.GetBytes("1234567890123456");
             
-            var cipher = Oracle.Encrypt(strToBeEncrypted, iv, key);
+            var cipher = Oracle.Encrypt(strToBeEncrypted, iv);
 
-            key = Encoding.ASCII.GetBytes("1234567890123453");
-            var size = PaddingOracle.GetPaddingSize(cipher, key); // if size = 16 the 
+            PaddingOracle.GetPlainText(cipher);
+
+            var size = PaddingOracle.GetPaddingSize(cipher); // if size = 16 the 
 
             
 

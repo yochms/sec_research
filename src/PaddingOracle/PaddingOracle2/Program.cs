@@ -12,18 +12,8 @@ namespace PaddingOracle2
             
             var cipher = Oracle.Encrypt(strToBeEncrypted, iv);
 
-            PaddingOracle.GetPlainText(cipher);
+            var plainText = PaddingOracle.GetPlainText(cipher, iv);
 
-            var size = PaddingOracle.GetPaddingSize(cipher); // if size = 16 the 
-
-            
-
-            var paddingError = PaddingOracle.HasPaddingError(cipher, iv);
-            Console.WriteLine(paddingError);
-            paddingError = PaddingOracle.HasPaddingError(cipher, new byte[] { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-            Console.WriteLine(paddingError);
-            paddingError = PaddingOracle.HasPaddingError(cipher, new byte[] { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 });
-            Console.WriteLine(paddingError);
         }
 
         

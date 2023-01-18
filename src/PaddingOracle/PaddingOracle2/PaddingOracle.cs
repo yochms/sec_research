@@ -70,7 +70,7 @@ namespace PaddingOracle2
             return BlockSize - paddingStartsAt;
         }
 
-        public static void GetPlainText(byte[] cipher)
+        public static string GetPlainText(byte[] cipher, byte[] iv)
         {
             var blockList = GetBlockList(cipher);
             var blockCount = blockList.Count;
@@ -79,8 +79,8 @@ namespace PaddingOracle2
             for (int i = blockList.Count - 1; i >= 0; i--)
             {
                 var decryptedArray = new byte[BlockSize];
-                var blockToBeProcessed = new byte[BlockSize * 2];
-                // TODO need to handle when i == 1
+                var blockToBeProcessed = new byte[BlockSize * 2];                
+                
                 //Array.Copy(blockList[i - 1], blockToBeProcessed, BlockSize);
                 Array.Copy(blockList[i], 0, blockToBeProcessed, BlockSize, BlockSize);
 
@@ -99,54 +99,42 @@ namespace PaddingOracle2
                             break;
                         }
                     }
-                    var decryptedValue = paddingSize ^ blockList[i - 1][BlockSize - paddingSize] ^ hit;
-                    decryptedArray[paddingSize - 1] = (byte)decryptedValue;
-                    for (int x = 1; x <= paddingSize; x++)
+
+                    int decryptedValue;
+
+                    if (i == 0)
                     {
-                        blockToBeProcessed[BlockSize - x] = (byte)(paddingSize + 1 ^ decryptedArray[x-1] ^ blockList[i - 1][BlockSize - x]);
+                        decryptedValue = paddingSize ^ iv[BlockSize - paddingSize] ^ hit;
+                        decryptedArray[paddingSize - 1] = (byte)decryptedValue;
+                        for (int x = 1; x <= paddingSize; x++)
+                        {
+                            blockToBeProcessed[BlockSize - x] = (byte)(paddingSize + 1 ^ decryptedArray[x - 1] ^ iv[BlockSize - x]);
+                        }
                     }
+                    else
+                    {
+                        decryptedValue = paddingSize ^ blockList[i - 1][BlockSize - paddingSize] ^ hit;
+                        decryptedArray[paddingSize - 1] = (byte)decryptedValue;
+                        for (int x = 1; x <= paddingSize; x++)
+                        {
+                            blockToBeProcessed[BlockSize - x] = (byte)(paddingSize + 1 ^ decryptedArray[x - 1] ^ blockList[i - 1][BlockSize - x]);
+                        }
+                    }
+                    
                     decryptedStack.Push((byte)decryptedValue);
-                }
+                }               
             }
 
-            //// POC
-            //var lastBlock = blockList[2];
-            //var lastBlockIv = new byte[BlockSize];
-
-            //byte[] test = new byte[BlockSize * 2]; // Define the 2 block cipher
-            //Array.Copy(lastBlockIv, test, BlockSize); // Copy our "fake" block to the cipher
-            //Array.Copy(lastBlock, 0, test, BlockSize, BlockSize);
-
-            //var hit = -1;
-            //for (int i = 1; i < 255; i++) // why 254 again?
-            //{
-            //    test[15] = (byte)i;
-            //    var hasPaddingError = HasPaddingError(test, lastBlockIv, Encoding.ASCII.GetBytes("1234567890123456"));
-            //    if (!hasPaddingError)
-            //    {
-            //        hit = i;
-            //        break;
-            //    }
-            //}
-
-            //var test2 = (1 ^ blockList[1][15] ^ hit);
-            //byte temp = (byte)test2;
-
-            //test[15] = (byte) (2 ^ temp ^ blockList[1][15]);
-
-            //for (int i = 1; i < 255; i++) // why 254 again?
-            //{
-            //    test[14] = (byte)i;
-            //    var hasPaddingError = HasPaddingError(test, lastBlockIv, Encoding.ASCII.GetBytes("1234567890123456"));
-            //    if (!hasPaddingError)
-            //    {
-            //        hit = i;
-            //        break;
-            //    }
-            //}
-            //test2 = (2 ^ blockList[1][14] ^ hit);
-
+            string text = string.Empty;
+            var index = 0;
+            var temp = new byte[decryptedStack.Count];
+            while (decryptedStack.Count != 0)
+            {
+                temp[index] = decryptedStack.Pop();
+                index++;
+            }
+            text = Encoding.ASCII.GetString(temp);
+            return text;            
         }
-
     }
 }
